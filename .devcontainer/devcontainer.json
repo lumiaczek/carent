@@ -1,0 +1,22 @@
+{
+    "name": "Carent",
+    "build": {
+        "dockerfile": "Dockerfile"
+    },
+    "runArgs": [
+        "--net=host",
+        "-e", "DISPLAY=${env:DISPLAY}",
+        "-e", "QT_X11_NO_MITSHM=1",
+        "-v", "/tmp/.X11-unix:/tmp/.X11-unix:rw"
+    ],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-vscode.cpptools",
+                "ms-vscode.cmake-tools",
+                "twxs.cmake",
+                "theqtcompany.qt"
+            ]
+        }
+    }
+}

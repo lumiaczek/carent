@@ -1,5 +1,0 @@
-/workspaces/carent/build/CMakeFiles/SymulatorWypozyczalni.dir
-/workspaces/carent/build/CMakeFiles/edit_cache.dir
-/workspaces/carent/build/CMakeFiles/rebuild_cache.dir
-/workspaces/carent/build/CMakeFiles/SymulatorWypozyczalni_autogen_timestamp_deps.dir
-/workspaces/carent/build/CMakeFiles/SymulatorWypozyczalni_autogen.dir

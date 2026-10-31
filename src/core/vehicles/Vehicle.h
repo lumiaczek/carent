@@ -14,10 +14,18 @@ class Vehicle{
             Economy,
             Premium
         };
+        enum class Type{
+            Generic, 
+            PassengerCar,
+            DeliveryVan,
+            Scooter
+        };
 
         Vehicle() = default;
 
         Vehicle(int id, const QString& brand, const QString& model, const QString& plate, Category cat, double dailyRate, Status status = Status::Available) : m_id(id), m_brand(brand), m_model(model), m_plate(plate), m_category(cat), m_status(status){}
+
+        virtual ~Vehicle() = default;
 
         int id() const { return m_id; }
         QString brand() const { return m_brand; }
@@ -32,6 +40,9 @@ class Vehicle{
         void setPlate(const QString& plate){m_plate = plate;}
         void setCategory(Category cat){m_category = cat;}
         void setStatus(Status status){m_status = status;}
+
+
+        virtual Type type() const {return Type::Generic;}
 
     private:
 

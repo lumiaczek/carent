@@ -10,9 +10,9 @@ class DatabaseManager{
         bool conn_open(const QString& dbPath = "carent_database.db");
         void close();
         bool initSchema();
-        bool addVehicle(const Vehicle& v);
+        bool addVehicle(QSharedPointer<Vehicle> v);
         bool removeVehicle(const QString& plate);
-        QList<Vehicle> getAllVehicles();
+        QList<QSharedPointer<Vehicle>> getAllVehicles();
 
     private:
         DatabaseManager() = default;

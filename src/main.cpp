@@ -5,6 +5,9 @@
 #include <QSqlError>
 #include <QDebug>
 #include <DatabaseManager.h>
+#include <QSharedPointer>
+#include "core/vehicles/PassengerCar.h"
+#include "core/vehicles/DeliveryVan.h"
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
@@ -15,19 +18,24 @@ int main(int argc, char *argv[]) {
     }
     qDebug() << "Correct initalization";
     db_manager.initSchema();
-    
-    Vehicle vehicleInstance1(1,"Audi", "A4", "PO 89812", Vehicle::Category::Economy, 200.0, Vehicle::Status::Rented);
-    Vehicle vehicleInstance2(1,"Skoda", "Octavia", "PY 54332", Vehicle::Category::Economy, 200.0, Vehicle::Status::InService);
-    Vehicle vehicleInstance3(1,"Porsche", "911", "CT 65643", Vehicle::Category::Premium, 200.0, Vehicle::Status::Available);
 
-    db_manager.addVehicle(vehicleInstance1);
-    db_manager.addVehicle(vehicleInstance2);
-    db_manager.addVehicle(vehicleInstance3);
 
-    QList<Vehicle> vehicles = db_manager.getAllVehicles();
+    QList<QSharedPointer<Vehicle>> fleet;
 
-    for(const Vehicle& v : vehicles){
-        qDebug() << "Marka: " << v.brand() << ", Model: " << v.model() << ", Blachy: " << v.plate();
+    auto car1 = QSharedPointer<PassengerCar>::create(1, "Audi", "A4", "PY 87282", Vehicle::Category::Economy, 100, Vehicle::Status::Available, 5, 5, true,Vehicle::Transmission::Manual, Vehicle::Fuel::Diesel, PassengerCar::BodyClass::Hatchback);
+
+    auto car2 = QSharedPointer<PassengerCar>::create(2, "Toyota", "Corolla", "PSL 26222", Vehicle::Category::Economy, 150, Vehicle::Status::Available, 5, 5, true,Vehicle::Transmission::Automatic, Vehicle::Fuel::Electric, PassengerCar::BodyClass::Sedan);
+
+    auto van = QSharedPointer<DeliveryVan>::create(3, "Iveco", "Daily", "PKN 44321", Vehicle::Category::Economy, 250, Vehicle::Status::Rented, Vehicle::Transmission::Manual, Vehicle::Fuel::Diesel, 3980, 9.5, false, 2.87);
+
+    fleet.append(car1);
+    fleet.append(car2);
+    fleet.append(van);
+
+    for(const auto& vehicle : fleet){
+        if(db_manager.addVehicle(vehicle)){
+            qDebug() << "Vehicle "<< vehicle->plate() << " successfully added to database";
+        }
     }
 
     db_manager.close();

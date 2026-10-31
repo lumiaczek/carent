@@ -2,6 +2,8 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDebug>
+#include "../core/vehicles/PassengerCar.h"
+#include "../core/vehicles/DeliveryVan.h"
 
 DatabaseManager& DatabaseManager::instance(){
     static DatabaseManager inst;
@@ -35,44 +37,78 @@ void DatabaseManager::close(){
         db.close();
     }
 }
-QList<Vehicle> DatabaseManager::getAllVehicles(){
-    QList<Vehicle> vehicles;
+QList<QSharedPointer<Vehicle>> DatabaseManager::getAllVehicles(){
+    QList<QSharedPointer<Vehicle>> vehicles;
     
-    QSqlQuery query("SELECT id, brand, model, plate FROM vehicles");
-
-    if(!query.isActive()){
-        qWarning() << "Cannot get vehicles from database" << query.lastError().text();
-        return vehicles;
-    }
-    while(query.next()){
-        Vehicle v;
-        v.setId(query.value("id").toInt());
-        v.setBrand(query.value("brand").toString());
-        v.setModel(query.value("model").toString());
-        v.setPlate(query.value("plate").toString());
-        vehicles.append(v);
-    }
     return vehicles;
-    
 }
-bool DatabaseManager::addVehicle(const Vehicle& v){
+bool DatabaseManager::addVehicle(QSharedPointer<Vehicle> v){
+    
+    QSqlDatabase db = QSqlDatabase::database();
+    db.transaction();
+
     QSqlQuery query;
-    query.prepare("INSERT INTO vehicles (brand, model, plate, category, daily_rate, status) VALUES (:brand, :model, :plate, :category, :dailyRate, :status)");
+    query.prepare("INSERT INTO vehicles(type, brand, model, plate, category, daily_rate, status, transmission, fuel)" "VALUES (:type, :brand, :model, :plate, :category, :dailyRate, :status, :transmission, :fuel)");
+    
+    QString typeStr = (v->type() == Vehicle::Type::PassengerCar) ? "PassengerCar" : (v->type() == Vehicle::Type::DeliveryVan ? "DeliveryVan" : "Scooter");
 
-    query.bindValue(":brand", v.brand());
-    query.bindValue(":model", v.model());
-    query.bindValue(":plate", v.plate());
-    query.bindValue(":dailyRate", 0.0);
 
-    query.bindValue(":category", static_cast<int>(v.category()));
-    query.bindValue(":status", static_cast<int>(v.status()));
+    query.bindValue(":type", typeStr);
+    query.bindValue(":brand", v->brand());
+    query.bindValue(":model", v->model());
+    query.bindValue(":plate", v->plate());
+    query.bindValue(":category", static_cast<int>(v->category()));
+    query.bindValue(":dailyRate", v->dailyRate());
+    query.bindValue(":status", static_cast<int>(v->status()));
+
+    query.bindValue(":transmission", static_cast<int>(v->transmission()));
+    query.bindValue(":fuel", static_cast<int>(v->fuel()));
 
     if(!query.exec()){
-        qWarning() << "Saving vehicle in database failed: " << query.lastError().text();
+        qWarning() << "Inserting vehicle into database ERROR: " <<  query.lastError().text();
+        db.rollback();
         return false;
     }
-    qDebug() << "Successfully added vehicle to database";
-    return true;
+    int newVehicleId = query.lastInsertId().toInt();
+
+    if(v->type() == Vehicle::Type::PassengerCar){
+        auto car = qSharedPointerCast<PassengerCar>(v);
+
+        QSqlQuery carQuery;
+        carQuery.prepare("INSERT INTO passenger_cars (vehicle_id, seats, trunk_capacity, body_class, doors, has_isofix) VALUES (:vid, :seats, :trunk_capacity, :body_class, :doors, :has_isofix)");
+        carQuery.bindValue(":vid", newVehicleId);
+        carQuery.bindValue(":seats", car->seats());
+        carQuery.bindValue(":trunk_capacity", car->trunkCapacity());
+        carQuery.bindValue(":body_class", static_cast<int>(car->bodyClass()));
+        carQuery.bindValue(":doors", car->doors());
+        carQuery.bindValue(":has_isofix", static_cast<int>(car->hasIsofix()));
+        
+        if(!carQuery.exec()) {
+            qWarning() << "Błąd zapisu do passenger_cars:" << carQuery.lastError().text();
+            db.rollback();
+            return false;
+        }
+    }
+    else if(v->type() == Vehicle::Type::DeliveryVan){
+        auto van = qSharedPointerCast<DeliveryVan>(v);
+        
+        QSqlQuery vanQuery;
+        vanQuery.prepare("INSERT INTO delivery_vans (vehicle_id, cargo_volume, capacity, has_tail_lift, height) VALUES (:vid, :cargo_volume, :capacity, :has_tail_lift, :height)");
+        vanQuery.bindValue(":vid", newVehicleId);
+        vanQuery.bindValue(":cargo_volume", van->cargoVolume());
+        vanQuery.bindValue(":capacity", van->capacity());
+        vanQuery.bindValue(":has_tail_lift", static_cast<int>(van->hasTailLift()));
+        vanQuery.bindValue(":height", van->vehicleHeight());
+        
+        if (!vanQuery.exec()) {
+            qWarning() << "Błąd zapisu do delivery_vans:" << vanQuery.lastError().text();
+            db.rollback();
+            return false;
+        }
+    }
+
+    return db.commit();
+
 }
 
 bool DatabaseManager::initSchema(){
@@ -86,10 +122,32 @@ bool DatabaseManager::initSchema(){
             plate TEXT UNIQUE NOT NULL, 
             category TEXT NOT NULL, 
             daily_rate REAL NOT NULL, 
-            status TEXT NOT NULL DEFAULT 'AVAILABLE'
+            status TEXT NOT NULL DEFAULT 'AVAILABLE',
+            transmission TEXT NOT NULL,
+            fuel TEXT NOT NULL
         );
     )";
-
+    QString createPassengerCars = R"(
+        CREATE TABLE IF NOT EXISTS passenger_cars (
+            vehicle_id INTEGER PRIMARY KEY,
+            seats INTEGER NOT NULL,
+            trunk_capacity INTEGER NOT NULL, 
+            body_class TEXT NOT NULL, 
+            doors INTEGER NOT NULL, 
+            has_isofix INTEGER NOT NULL,
+            FOREIGN KEY(vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
+        );
+    )";
+    QString createDeliveryVans = R"(
+        CREATE TABLE IF NOT EXISTS delivery_vans (
+            vehicle_id INTEGER PRIMARY KEY, 
+            cargo_volume REAL NOT NULL, 
+            capacity REAL NOT NULL, 
+            has_tail_lift INTEGER NOT NULL,
+            height REAL NOT NULL,
+            FOREIGN KEY(vehicle_id) REFERENCES vehicles(id) ON DELETE CASCADE
+        );
+    )";
     QString createCustomers = R"(
         CREATE TABLE IF NOT EXISTS customers (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -101,7 +159,7 @@ bool DatabaseManager::initSchema(){
         )
     )";
 
-    if(!q.exec(createVehicles) || !q.exec(createCustomers)){
+    if(!q.exec(createVehicles) || !q.exec(createCustomers) || !q.exec(createPassengerCars) || !q.exec(createDeliveryVans)){
         qCritical() << "Error while creating tables" << q.lastError().text();
 
         return false;

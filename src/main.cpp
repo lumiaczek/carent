@@ -38,6 +38,17 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    QList<QSharedPointer<Vehicle>> from_database = db_manager.getAllVehicles();
+    if(from_database.count() == 0) {
+        qWarning() << "No items fetched from database";
+    }
+    else{
+        for(const auto& vehicle : fleet){
+            qDebug() << "Vehicle "<< vehicle->plate() << " successfully fetched from database";
+        }
+    }
+    
+
     db_manager.close();
 
     QWidget window;

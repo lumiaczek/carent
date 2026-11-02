@@ -39,7 +39,50 @@ void DatabaseManager::close(){
 }
 QList<QSharedPointer<Vehicle>> DatabaseManager::getAllVehicles(){
     QList<QSharedPointer<Vehicle>> vehicles;
-    
+    QSqlQuery query;
+
+    QString sql = R"(
+        SELECT v.id, v.type, v.brand, v.model, v.plate, v.category, v.daily_rate, v.status, v.transmission, v.fuel, p.seats, p.trunk_capacity, p.body_class, p.doors, p.has_isofix, c.cargo_volume, c.capacity, c.has_tail_lift, c.height FROM vehicles v LEFT JOIN passenger_cars p ON v.id = p.vehicle_id LEFT JOIN delivery_vans c ON v.id = c.vehicle_id
+    )";
+
+    if(!query.exec(sql)){
+        qWarning() << "Error fetching vehicles from database" << query.lastError().text();
+        return vehicles;
+    }
+    while(query.next()){
+        int id = query.value("id").toInt();
+        QString typeStr = query.value("type").toString();
+        QString brand = query.value("brand").toString();
+        QString model = query.value("model").toString();
+        QString plate = query.value("plate").toString();
+        Vehicle::Category cat = static_cast<Vehicle::Category>(query.value("category").toInt());
+        Vehicle::Status stat = static_cast<Vehicle::Status>(query.value("status").toInt());
+        double dailyRate = query.value("daily_rate").toDouble();
+        Vehicle::Transmission transm = static_cast<Vehicle::Transmission>(query.value("transmission").toInt());
+        Vehicle::Fuel fuel = static_cast<Vehicle::Fuel>(query.value("fuel").toInt());
+
+        if(typeStr == "PassengerCar"){
+            int seats = query.value("seats").toInt();
+            double trunk_capacity = query.value("trunk_capacity").toDouble();
+            PassengerCar::BodyClass body_class = static_cast<PassengerCar::BodyClass>(query.value("body_class").toInt());
+            int doors = query.value("doors").toInt();
+            bool hasIsofix = static_cast<bool>(query.value("has_isofix").toInt());
+
+            auto car = QSharedPointer<PassengerCar>::create(id, brand, model, plate, cat, dailyRate, stat, seats, doors, hasIsofix, transm, fuel, body_class);
+
+            vehicles.append(car);
+        }
+        else if(typeStr == "DeliveryVan"){
+            double cargo_volume = query.value("cargo_volume").toDouble();
+            double capacity = query.value("capacity").toDouble();
+            bool has_tail_lift = static_cast<bool>(query.value("has_tail_lift").toInt());
+            double height = query.value("height").toDouble();
+
+            auto van = QSharedPointer<DeliveryVan>::create(id, brand, model, plate, cat, dailyRate, stat, transm, fuel, capacity, cargo_volume, has_tail_lift, height);
+
+            vehicles.append(van);
+        }
+    }
     return vehicles;
 }
 bool DatabaseManager::addVehicle(QSharedPointer<Vehicle> v){
@@ -111,12 +154,14 @@ bool DatabaseManager::addVehicle(QSharedPointer<Vehicle> v){
 
 }
 
+
 bool DatabaseManager::initSchema(){
     QSqlQuery q;
 
     QString createVehicles = R"(
         CREATE TABLE IF NOT EXISTS vehicles (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            type TEXT NOT NULL,
             brand TEXT NOT NULL, 
             model TEXT NOT NULL, 
             plate TEXT UNIQUE NOT NULL, 

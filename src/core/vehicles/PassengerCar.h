@@ -10,7 +10,7 @@ class PassengerCar : public Vehicle{
             Hatchback, 
             Roadster
         };
-        PassengerCar(int id, const QString& brand, const QString& model, const QString& plate, Category cat, double dailyRate, Status status = Status::Available, int seats, int doors, bool hasIsofix, Transmission transmission, Fuel fuel, BodyClass bodyClass) : Vehicle(id, brand, model, plate, cat, dailyRate, status, transmission, fuel), m_seats(seats), m_hasIsofix(hasIsofix), m_doors(doors), m_bodyClass(bodyClass){};
+        PassengerCar(int id, const QString& brand, const QString& model, const QString& plate, Category cat, double dailyRate, Status status, int seats, int doors, bool hasIsofix, Transmission transmission, Fuel fuel, BodyClass bodyClass) : Vehicle(id, brand, model, plate, cat, dailyRate, status, transmission, fuel), m_seats(seats), m_hasIsofix(hasIsofix), m_doors(doors), m_bodyClass(bodyClass){};
 
         int seats() {return m_seats;}
         void setSeats(int seats) {

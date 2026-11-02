@@ -22,6 +22,8 @@ qt_add_executable(SymulatorWypozyczalni
     src/core/vehicles/PassengerCar.h
     src/core/vehicles/DeliveryVan.h
     src/core/vehicles/Scooter.h
+    src/core/Rental.h
+    src/core/Customer.h
 )
 
 target_include_directories(SymulatorWypozyczalni PRIVATE src/core src/services src/ui src/database)

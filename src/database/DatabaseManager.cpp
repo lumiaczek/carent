@@ -153,6 +153,12 @@ bool DatabaseManager::addVehicle(QSharedPointer<Vehicle> v){
     return db.commit();
 
 }
+bool DatabaseManager::addCustomer(const Customer& customer){
+    QSqlQuery query;
+
+    query.prepare("INSERT INTO customers(name, surname, birthdate, licence, status) VALUES (:name, :surname, :birthdate, :licence, :status)");
+    query.bindValue("")
+};
 
 
 bool DatabaseManager::initSchema(){
@@ -203,8 +209,21 @@ bool DatabaseManager::initSchema(){
             status TEXT NOT NULL DEFAULT 'ACTIVE'
         )
     )";
+    QString createRentals = R"(
+        CREATE TABLE IF NOT EXISTS rentals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            customer_id INTEGER NOT NULL,
+            vehicle_id INTEGER NOT NULL,
+            start_date TEXT NOT NULL,
+            end_date TEXT NOT NULL,
+            total_cost REAL NOT NULL,
+            status TEXT NOT NULL DEFAULT 'ACTIVE',
+            FOREIGN KEY(customer_id) REFERENCES customers(id) ON DELETE RESTRICT,
+            FOREIGN KEY(vehicle_id) REFERENCES vehicles(id) ON DELETE RESTRICT
+        )
+    )";
 
-    if(!q.exec(createVehicles) || !q.exec(createCustomers) || !q.exec(createPassengerCars) || !q.exec(createDeliveryVans)){
+    if(!q.exec(createVehicles) || !q.exec(createCustomers) || !q.exec(createPassengerCars) || !q.exec(createDeliveryVans) || !q.exec(createRentals)){
         qCritical() << "Error while creating tables" << q.lastError().text();
 
         return false;

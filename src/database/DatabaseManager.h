@@ -15,6 +15,7 @@ class DatabaseManager{
         bool removeVehicle(const QString& plate);
         QList<QSharedPointer<Vehicle>> getAllVehicles();
         bool addCustomer(const Customer& customer);
+        QList<Customer> getAllCustomers(); 
 
     private:
         DatabaseManager() = default;

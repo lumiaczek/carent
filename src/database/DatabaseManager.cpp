@@ -157,8 +157,51 @@ bool DatabaseManager::addCustomer(const Customer& customer){
     QSqlQuery query;
 
     query.prepare("INSERT INTO customers(name, surname, birthdate, licence, status) VALUES (:name, :surname, :birthdate, :licence, :status)");
-    query.bindValue("")
+    query.bindValue(":name", customer.name());
+    query.bindValue(":surname", customer.surname());
+    query.bindValue(":birthdate", customer.birthdate());
+    query.bindValue(":licence", customer.licence());
+    query.bindValue(":status", static_cast<int>(customer.status()));
+
+    if(!query.exec()){
+        qWarning() << "Cannot add customer to database";
+        return false;
+    }
+    qDebug() << "Customer has been successfully add to database";
+    return true;
 };
+
+QList<Customer> DatabaseManager::getAllCustomers(){
+    QList<Customer> customers;
+    QSqlQuery query;
+
+    QString selectStr = R"(
+        SELECT id, name, surname, birthdate, licence, status FROM customers;
+    )";
+
+    if(!query.exec(selectStr)){
+        qWarning() << "Cannot fetch customers from database";
+        return customers;
+    }
+
+    while(query.next()){
+        int id = query.value("id").toInt();
+        QString name = query.value("name").toString();
+        QString surname = query.value("surname").toString();
+        QDate birthdate = query.value("birthdate").toDate();
+        QString licence = query.value("licence").toString();
+        Customer::CustomerStatus status = static_cast<Customer::CustomerStatus>(query.value("status").toInt());
+
+        Customer customer(name, surname, birthdate, licence, status);
+
+        customers.append(customer);
+    }
+
+    return customers;
+
+} 
+
+
 
 
 bool DatabaseManager::initSchema(){

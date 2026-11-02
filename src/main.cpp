@@ -28,6 +28,9 @@ int main(int argc, char *argv[]) {
 
     auto van = QSharedPointer<DeliveryVan>::create(3, "Iveco", "Daily", "PKN 44321", Vehicle::Category::Economy, 250, Vehicle::Status::Rented, Vehicle::Transmission::Manual, Vehicle::Fuel::Diesel, 3980, 9.5, false, 2.87);
 
+    Customer customer1("Jan", "Kowalski", QDate::fromString("1990-01-01", Qt::ISODate), "B", Customer::CustomerStatus::CanRent);
+    db_manager.addCustomer(customer1);
+
     fleet.append(car1);
     fleet.append(car2);
     fleet.append(van);
@@ -45,6 +48,16 @@ int main(int argc, char *argv[]) {
     else{
         for(const auto& vehicle : fleet){
             qDebug() << "Vehicle "<< vehicle->plate() << " successfully fetched from database";
+        }
+    }
+
+    QList<Customer> customers = db_manager.getAllCustomers();
+    if(customers.count() == 0) {
+        qWarning() << "No items fetched from database";
+    }
+    else{
+        for(const Customer& customer : customers){
+            qDebug() << "Customer "<< customer.name() << " " <<customer.surname() << " successfully fetched from database";
         }
     }
     

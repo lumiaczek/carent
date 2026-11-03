@@ -114,6 +114,7 @@ bool DatabaseManager::addVehicle(QSharedPointer<Vehicle> v){
         return false;
     }
     int newVehicleId = query.lastInsertId().toInt();
+    v->setId(newVehicleId);
 
     if(v->type() == Vehicle::Type::PassengerCar){
         auto car = qSharedPointerCast<PassengerCar>(v);
@@ -154,7 +155,7 @@ bool DatabaseManager::addVehicle(QSharedPointer<Vehicle> v){
     return db.commit();
 
 }
-bool DatabaseManager::addCustomer(const Customer& customer){
+bool DatabaseManager::addCustomer(Customer& customer){
     QSqlQuery query;
 
     query.prepare("INSERT INTO customers(name, surname, birthdate, licence, status) VALUES (:name, :surname, :birthdate, :licence, :status)");
@@ -168,6 +169,7 @@ bool DatabaseManager::addCustomer(const Customer& customer){
         qWarning() << "Cannot add customer to database";
         return false;
     }
+    customer.setId(query.lastInsertId().toInt());
     qDebug() << "Customer has been successfully add to database";
     return true;
 };
@@ -193,7 +195,7 @@ QList<Customer> DatabaseManager::getAllCustomers(){
         QString licence = query.value("licence").toString();
         Customer::CustomerStatus status = static_cast<Customer::CustomerStatus>(query.value("status").toInt());
 
-        Customer customer(name, surname, birthdate, licence, status);
+        Customer customer(id, name, surname, birthdate, licence, status);
 
         customers.append(customer);
     }
@@ -202,13 +204,75 @@ QList<Customer> DatabaseManager::getAllCustomers(){
 
 } 
 
-bool DatabaseManager::addRental(const Rental& rental){
+bool DatabaseManager::addRental(Rental& rental){
+    db.transaction();
+
+    QSqlQuery vehicleQueryUpdate;
+
+    vehicleQueryUpdate.prepare("UPDATE vehicles SET status = :status WHERE id = :id AND status = :status_available");
+    vehicleQueryUpdate.bindValue(":status", static_cast<int>(Vehicle::Status::Rented));
+    vehicleQueryUpdate.bindValue(":id", rental.vehicleId());
+    vehicleQueryUpdate.bindValue(":status_available", static_cast<int>(Vehicle::Status::Available));
+
+    if(!vehicleQueryUpdate.exec() || vehicleQueryUpdate.numRowsAffected() == 0){
+        qWarning() << "Cannot add rental to database. Check if you are not trying to rent car that was already rented";
+        db.rollback();
+        return false;
+    }
+
     QSqlQuery query;
     query.prepare("INSERT INTO rentals(customer_id, vehicle_id, start_date, end_date, total_cost, status) VALUES (:customer_id, :vehicle_id, :start_date, :end_date, :total_cost, :status)");
-    query.bindValue("customer_id", rental.customerId());
-    query.bindValue("vehicle_id", rental.vehicleId());
-    query.bindValue("start_date", rental.startDate().toString());
-    query.bindValue("end_date", rental.endDate().toString());
+    query.bindValue(":customer_id", rental.customerId());
+    query.bindValue(":vehicle_id", rental.vehicleId());
+    qDebug() << rental.startDate();
+    query.bindValue(":start_date", rental.startDate().toString(Qt::ISODate));
+    query.bindValue(":end_date", rental.endDate().toString(Qt::ISODate));
+    query.bindValue(":total_cost", rental.totalCost());
+    query.bindValue(":status", static_cast<int>(rental.status()));
+
+    
+    if(!query.exec()){
+        qWarning() << "Cannot add rental to database" << query.lastError().text();
+        db.rollback();
+        return false;
+    }
+
+    rental.setId(query.lastInsertId().toInt());
+    qDebug() << "Successfully rented " << rental.vehicleId() << " vehicle to " << rental.customerId() << " customer";
+    return db.commit(); 
+}
+
+QList<Rental> DatabaseManager::getAllRentals(){
+    QSqlQuery query;
+
+    QList<Rental> rentals;
+
+    QString rentalsStr = R"(
+        SELECT * FROM rentals;
+    )";
+
+    if(!query.exec(rentalsStr)){
+        qWarning() << "Cannot fetch rentals from database";
+        return rentals;
+    }
+
+    while(query.next()){
+        int id = query.value("id").toInt();
+        int customer_id = query.value("customer_id").toInt();
+        int vehicle_id = query.value("vehicle_id").toInt();
+        QDate start_date = query.value("start_date").toDate();
+        QDate end_date = query.value("end_data").toDate();
+
+        double total_cost = query.value("total_cost").toDouble();
+
+        Rental::Status status = static_cast<Rental::Status>(query.value("status").toInt());
+
+        Rental r(id, customer_id, vehicle_id, start_date, end_date, total_cost, status);
+
+        rentals.append(r);
+    }
+
+    return rentals;
 }
 
 
@@ -224,7 +288,7 @@ bool DatabaseManager::initSchema(){
             plate TEXT UNIQUE NOT NULL, 
             category TEXT NOT NULL, 
             daily_rate REAL NOT NULL, 
-            status TEXT NOT NULL DEFAULT 'AVAILABLE',
+            status TEXT NOT NULL DEFAULT 'Available',
             transmission TEXT NOT NULL,
             fuel TEXT NOT NULL
         );

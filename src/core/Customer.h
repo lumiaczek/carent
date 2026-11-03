@@ -8,7 +8,7 @@ class Customer{
             CannotRent
         };
         Customer() = default;
-        Customer(const QString& name, const QString& surname, const QDate& birthdate, const QString& licence, CustomerStatus status = CustomerStatus::CanRent): m_name(name), m_surname(surname), m_birthdate(birthdate), m_licence(licence), m_status(status) {};
+        Customer(int id, const QString& name, const QString& surname, const QDate& birthdate, const QString& licence, CustomerStatus status = CustomerStatus::CanRent): m_id(id), m_name(name), m_surname(surname), m_birthdate(birthdate), m_licence(licence), m_status(status) {};
         ~Customer() = default;
         int id() const {return m_id;}
         QString name() const {return m_name;}

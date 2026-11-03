@@ -22,13 +22,13 @@ int main(int argc, char *argv[]) {
 
     QList<QSharedPointer<Vehicle>> fleet;
 
-    auto car1 = QSharedPointer<PassengerCar>::create(1, "Audi", "A4", "PY 87282", Vehicle::Category::Economy, 100, Vehicle::Status::Available, 5, 5, true,Vehicle::Transmission::Manual, Vehicle::Fuel::Diesel, PassengerCar::BodyClass::Hatchback);
+    auto car1 = QSharedPointer<PassengerCar>::create(0, "Audi", "A4", "PY 87282", Vehicle::Category::Economy, 100, Vehicle::Status::Available, 5, 5, true,Vehicle::Transmission::Manual, Vehicle::Fuel::Diesel, PassengerCar::BodyClass::Hatchback);
 
-    auto car2 = QSharedPointer<PassengerCar>::create(2, "Toyota", "Corolla", "PSL 26222", Vehicle::Category::Economy, 150, Vehicle::Status::Available, 5, 5, true,Vehicle::Transmission::Automatic, Vehicle::Fuel::Electric, PassengerCar::BodyClass::Sedan);
+    auto car2 = QSharedPointer<PassengerCar>::create(0, "Toyota", "Corolla", "PSL 26222", Vehicle::Category::Economy, 150, Vehicle::Status::Available, 5, 5, true,Vehicle::Transmission::Automatic, Vehicle::Fuel::Electric, PassengerCar::BodyClass::Sedan);
 
-    auto van = QSharedPointer<DeliveryVan>::create(3, "Iveco", "Daily", "PKN 44321", Vehicle::Category::Economy, 250, Vehicle::Status::Rented, Vehicle::Transmission::Manual, Vehicle::Fuel::Diesel, 3980, 9.5, false, 2.87);
+    auto van = QSharedPointer<DeliveryVan>::create(0, "Iveco", "Daily", "PKN 44321", Vehicle::Category::Economy, 250, Vehicle::Status::Rented, Vehicle::Transmission::Manual, Vehicle::Fuel::Diesel, 3980, 9.5, false, 2.87);
 
-    Customer customer1("Jan", "Kowalski", QDate::fromString("1990-01-01", Qt::ISODate), "B", Customer::CustomerStatus::CanRent);
+    Customer customer1(0, "Jan", "Kowalski", QDate::fromString("1990-01-01", Qt::ISODate), "B", Customer::CustomerStatus::CanRent);
     db_manager.addCustomer(customer1);
 
     fleet.append(car1);
@@ -60,7 +60,21 @@ int main(int argc, char *argv[]) {
             qDebug() << "Customer "<< customer.name() << " " <<customer.surname() << " successfully fetched from database";
         }
     }
+    QDate rentalStart = QDate::fromString("2026-11-03", "yyyy-MM-dd");
+    QDate rentalEnd = QDate::fromString("2026-11-14", "yyyy-MM-dd");
+    Rental rental1(0, customer1.id(), car1->id(), rentalStart, rentalEnd, Rental::calculateTotalCost(rentalStart, rentalEnd, car1->dailyRate()));
     
+    db_manager.addRental(rental1);
+
+    QList<Rental> rentals = db_manager.getAllRentals();
+    if(rentals.count() == 0){
+        qWarning() << "No rentals fetched from database";
+    }
+    else{
+        for(const Rental& rental : rentals){
+            qDebug() << "Customer "<< rental.customerId() << " rented vehicle: " <<rental.vehicleId() << " [record fetched from database]";
+        }
+    }
 
     db_manager.close();
 

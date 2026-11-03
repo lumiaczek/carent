@@ -4,6 +4,7 @@
 #include <QDebug>
 #include "../core/vehicles/PassengerCar.h"
 #include "../core/vehicles/DeliveryVan.h"
+#include "../core/Rental.h"
 
 DatabaseManager& DatabaseManager::instance(){
     static DatabaseManager inst;
@@ -201,7 +202,14 @@ QList<Customer> DatabaseManager::getAllCustomers(){
 
 } 
 
-
+bool DatabaseManager::addRental(const Rental& rental){
+    QSqlQuery query;
+    query.prepare("INSERT INTO rentals(customer_id, vehicle_id, start_date, end_date, total_cost, status) VALUES (:customer_id, :vehicle_id, :start_date, :end_date, :total_cost, :status)");
+    query.bindValue("customer_id", rental.customerId());
+    query.bindValue("vehicle_id", rental.vehicleId());
+    query.bindValue("start_date", rental.startDate().toString());
+    query.bindValue("end_date", rental.endDate().toString());
+}
 
 
 bool DatabaseManager::initSchema(){

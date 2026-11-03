@@ -3,6 +3,7 @@
 #include <QString>
 #include "../core/vehicles/Vehicle.h"
 #include "../core/Customer.h"
+#include "../core/Rental.h"
 
 class DatabaseManager{
     public:
@@ -16,6 +17,7 @@ class DatabaseManager{
         QList<QSharedPointer<Vehicle>> getAllVehicles();
         bool addCustomer(const Customer& customer);
         QList<Customer> getAllCustomers(); 
+        bool addRental(const Rental& rental);
 
     private:
         DatabaseManager() = default;

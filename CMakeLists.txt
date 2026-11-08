@@ -17,7 +17,18 @@ qt_add_executable(SymulatorWypozyczalni
     src/ui/dashboard/dashboard.ui
 )
 
-target_include_directories(SymulatorWypozyczalni PRIVATE src/core src/services src/ui)
+qt_add_resources(SymulatorWypozyczalni "styles"
+    PREFIX "/"
+    BASE "src/ui/dashboard"
+    FILES src/ui/dashboard/style.qss
+)
+
+target_include_directories(SymulatorWypozyczalni PRIVATE 
+    src/core 
+    src/services 
+    src/ui
+    src/ui/dashboard
+)
 
 target_link_libraries(SymulatorWypozyczalni PRIVATE
     Qt6::Core

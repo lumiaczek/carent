@@ -1,3 +1,4 @@
+#include "dashboard.h"
 #include <QApplication>
 #include <QWidget>
 #include <QSqlDatabase>
@@ -8,6 +9,9 @@
 #include <QSharedPointer>
 #include "core/vehicles/PassengerCar.h"
 #include "core/vehicles/DeliveryVan.h"
+#include <QDebug>
+#include <QFile>
+#include <QTextStream>
 
 int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
@@ -82,5 +86,17 @@ int main(int argc, char *argv[]) {
     window.resize(400, 300);
     window.show();
     
+    QFile styleFile(":/style.qss");
+    if (styleFile.open(QFile::ReadOnly | QFile::Text)) {
+        QTextStream stream(&styleFile);
+        app.setStyleSheet(stream.readAll());
+        styleFile.close();
+    } else {
+        qWarning() << "Nie udalo sie wczytac pliku style.qss!";
+    }
+
+    DashboardWindow window;
+    window.show();
+
     return app.exec();
 }

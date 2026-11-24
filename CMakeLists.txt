@@ -24,6 +24,11 @@ qt_add_executable(SymulatorWypozyczalni
     src/core/vehicles/Scooter.h
     src/core/Rental.h
     src/core/Customer.h
+    src/ui/dashboard/DashboardModels.h
+    src/ui/dashboard/DashboardService.h
+    src/ui/dashboard/DashboardService.cpp
+    src/database/DatabaseSeeder.cpp
+    src/database/DatabaseSeeder.h
 )
 
 target_include_directories(SymulatorWypozyczalni PRIVATE src/core src/services src/ui src/database)

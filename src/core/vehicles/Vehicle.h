@@ -33,7 +33,7 @@ class Vehicle{
 
         Vehicle() = default;
 
-        Vehicle(int id, const QString& brand, const QString& model, const QString& plate, Category cat, double dailyRate, Status status, Transmission transmission, Fuel fuel) : m_brand(brand), m_model(model), m_plate(plate), m_category(cat), m_status(status), m_transmission(transmission), m_fuel(fuel){}
+        Vehicle(int id, const QString& brand, const QString& model, const QString& plate, Category cat, double dailyRate, Status status, Transmission transmission, Fuel fuel) : m_transmission(transmission), m_fuel(fuel), m_id(id), m_brand(brand), m_model(model), m_plate(plate), m_category(cat), m_status(status), m_dailyRate(dailyRate){}
 
         virtual ~Vehicle() = default;
 

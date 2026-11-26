@@ -1,9 +1,15 @@
 #include "dashboard.h"
+#include "../svg_helper.h"
 #include "ui_dashboard.h"
 #include <QGraphicsDropShadowEffect>
 #include <QHBoxLayout>
 #include <QHeaderView>
+#include <QIcon>
 #include <QLabel>
+#include <QPainter>
+#include <QPixmap>
+
+using namespace carent::ui;
 
 DashboardWindow::DashboardWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::DashboardWindow) {
@@ -15,6 +21,14 @@ DashboardWindow::DashboardWindow(QWidget *parent)
     for (auto *card : cards) {
         applyShadow(card);
     }
+
+    ui->iconIncome->setPixmap(colorizeSvgPixmap(":/icons/trend-up.svg", QColor("#2e9f63"), {20, 20}));
+    ui->iconCosts->setPixmap(colorizeSvgPixmap(":/icons/fuel.svg", QColor("#d94343"), {20, 20}));
+    ui->iconClientsKpi->setPixmap(colorizeSvgPixmap(":/icons/user.svg", QColor("#3b76a0"), {20, 20}));
+    ui->iconRentalsKpi->setPixmap(colorizeSvgPixmap(":/icons/car-front.svg", QColor("#1e88e5"), {20, 20}));
+
+    ui->ActionBtnBlue->setIcon(colorizeSvgIcon(":/icons/key-square.svg", Qt::white, {16, 16}));
+    ui->ActionBtnGreen->setIcon(colorizeSvgIcon(":/icons/user-add.svg", Qt::white, {16, 16}));
 
     setupTable(ui->tableRentals);
     setupTable(ui->tableClients);

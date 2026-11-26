@@ -1,0 +1,22 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+  <qresource prefix="/icons">
+    <file alias="car-logo.svg">icons/car-logo.svg</file>
+    <file alias="dashboard.svg">icons/dashboard.svg</file>
+    <file alias="bell.svg">icons/bell.svg</file>
+    <file alias="car-front.svg">icons/car-front.svg</file>
+    <file alias="user.svg">icons/user.svg</file>
+    <file alias="chart.svg">icons/chart.svg</file>
+    <file alias="map-pin.svg">icons/map-pin.svg</file>
+    <file alias="wrench.svg">icons/wrench.svg</file>
+    <file alias="settings.svg">icons/settings.svg</file>
+    <file alias="trend-up.svg">icons/trend-up.svg</file>
+    <file alias="fuel.svg">icons/fuel.svg</file>
+    <file alias="dot-blue.svg">icons/dot-blue.svg</file>
+    <file alias="dot-green.svg">icons/dot-green.svg</file>
+    <file alias="dot-orange.svg">icons/dot-orange.svg</file>
+    <file alias="key-square.svg">icons/key-square.svg</file>
+    <file alias="warning.svg">icons/warning.svg</file>
+    <file alias="user-add.svg">icons/user-add.svg</file>
+  </qresource>
+</RCC>

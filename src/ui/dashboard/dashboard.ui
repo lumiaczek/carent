@@ -30,7 +30,7 @@
     <property name="bottomMargin">
      <number>0</number>
     </property>
-    
+
     <item>
      <widget class="QFrame" name="Sidebar">
       <property name="minimumSize">
@@ -62,11 +62,47 @@
         <number>24</number>
        </property>
        <item>
-        <widget class="QLabel" name="LogoLabel">
-         <property name="text">
-          <string>🚘  Carent</string>
+        <layout class="QHBoxLayout" name="logoLayout">
+         <property name="spacing">
+          <number>10</number>
          </property>
-        </widget>
+         <item>
+          <widget class="QLabel" name="LogoIcon">
+           <property name="minimumSize">
+            <size>
+             <width>28</width>
+             <height>28</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>28</width>
+             <height>28</height>
+            </size>
+           </property>
+           <property name="pixmap">
+            <pixmap resource="resources.qrc">:/icons/car-logo.svg</pixmap>
+           </property>
+           <property name="scaledContents">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="LogoLabel">
+           <property name="text">
+            <string>Carent</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="logoRightSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+          </spacer>
+         </item>
+        </layout>
        </item>
        <item>
         <spacer name="logoSpacer">
@@ -87,7 +123,17 @@
        <item>
         <widget class="QPushButton" name="btnDashboard">
          <property name="text">
-          <string>  🏠   Dashboard</string>
+          <string>Dashboard</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/dashboard.svg</normaloff>:/icons/dashboard.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -100,7 +146,17 @@
        <item>
         <widget class="QPushButton" name="btnNotifications">
          <property name="text">
-          <string>  🔔   Powiadomienia</string>
+          <string>Powiadomienia</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/bell.svg</normaloff>:/icons/bell.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -110,7 +166,17 @@
        <item>
         <widget class="QPushButton" name="btnFleet">
          <property name="text">
-          <string>  🚗   Flota</string>
+          <string>Flota</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/car-front.svg</normaloff>:/icons/car-front.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -120,7 +186,17 @@
        <item>
         <widget class="QPushButton" name="btnClients">
          <property name="text">
-          <string>  👤   Klienci</string>
+          <string>Klienci</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/user.svg</normaloff>:/icons/user.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -130,7 +206,17 @@
        <item>
         <widget class="QPushButton" name="btnFinance">
          <property name="text">
-          <string>  📊   Finanse</string>
+          <string>Finanse</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/chart.svg</normaloff>:/icons/chart.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -140,7 +226,17 @@
        <item>
         <widget class="QPushButton" name="btnTrack">
          <property name="text">
-          <string>  📍   Śledź</string>
+          <string>Śledź</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/map-pin.svg</normaloff>:/icons/map-pin.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -150,7 +246,17 @@
        <item>
         <widget class="QPushButton" name="btnWorkshop">
          <property name="text">
-          <string>  🔧   Warsztat</string>
+          <string>Warsztat</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/wrench.svg</normaloff>:/icons/wrench.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -160,7 +266,17 @@
        <item>
         <widget class="QPushButton" name="btnSettings">
          <property name="text">
-          <string>  ⚙️   Ustawienia</string>
+          <string>Ustawienia</string>
+         </property>
+         <property name="icon">
+          <iconset resource="resources.qrc">
+           <normaloff>:/icons/settings.svg</normaloff>:/icons/settings.svg</iconset>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>18</width>
+           <height>18</height>
+          </size>
          </property>
          <property name="cssClass" stdset="0">
           <string>NavButton</string>
@@ -202,7 +318,7 @@
        <property name="bottomMargin">
         <number>24</number>
        </property>
-       
+
        <item>
         <widget class="QLabel" name="Breadcrumb">
          <property name="text">
@@ -211,13 +327,12 @@
         </widget>
        </item>
 
-       <!-- Górny rząd 4 kart KPI -->
        <item>
         <layout class="QHBoxLayout" name="statsLayout">
          <property name="spacing">
           <number>20</number>
          </property>
-         
+
          <item>
           <widget class="QFrame" name="cardIncome">
            <property name="cssClass" stdset="0">
@@ -250,8 +365,9 @@
                 <property name="minimumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="maximumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="alignment"><set>Qt::AlignCenter</set></property>
-                <property name="text"><string>📈</string></property>
-                <property name="styleSheet"><string>background-color: #e8f6ef; color: #2e9f63; border-radius: 8px; font-size: 18px;</string></property>
+                <property name="pixmap"><pixmap resource="resources.qrc">:/icons/trend-up.svg</pixmap></property>
+                <property name="scaledContents"><bool>false</bool></property>
+                <property name="styleSheet"><string>background-color: #e8f6ef; border-radius: 8px; padding: 9px;</string></property>
                </widget>
               </item>
              </layout>
@@ -292,8 +408,9 @@
                 <property name="minimumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="maximumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="alignment"><set>Qt::AlignCenter</set></property>
-                <property name="text"><string>⛽</string></property>
-                <property name="styleSheet"><string>background-color: #fceaea; color: #d94343; border-radius: 8px; font-size: 18px;</string></property>
+                <property name="pixmap"><pixmap resource="resources.qrc">:/icons/fuel.svg</pixmap></property>
+                <property name="scaledContents"><bool>false</bool></property>
+                <property name="styleSheet"><string>background-color: #fceaea; border-radius: 8px; padding: 9px;</string></property>
                </widget>
               </item>
              </layout>
@@ -334,8 +451,9 @@
                 <property name="minimumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="maximumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="alignment"><set>Qt::AlignCenter</set></property>
-                <property name="text"><string>👤</string></property>
-                <property name="styleSheet"><string>background-color: #ebf3f9; color: #3b76a0; border-radius: 8px; font-size: 18px;</string></property>
+                <property name="pixmap"><pixmap resource="resources.qrc">:/icons/user.svg</pixmap></property>
+                <property name="scaledContents"><bool>false</bool></property>
+                <property name="styleSheet"><string>background-color: #ebf3f9; border-radius: 8px; padding: 9px;</string></property>
                </widget>
               </item>
              </layout>
@@ -376,8 +494,9 @@
                 <property name="minimumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="maximumSize"><size><width>40</width><height>40</height></size></property>
                 <property name="alignment"><set>Qt::AlignCenter</set></property>
-                <property name="text"><string>🚘</string></property>
-                <property name="styleSheet"><string>background-color: #e8f4fd; color: #1e88e5; border-radius: 8px; font-size: 18px;</string></property>
+                <property name="pixmap"><pixmap resource="resources.qrc">:/icons/car-front.svg</pixmap></property>
+                <property name="scaledContents"><bool>false</bool></property>
+                <property name="styleSheet"><string>background-color: #e8f4fd; border-radius: 8px; padding: 9px;</string></property>
                </widget>
               </item>
              </layout>
@@ -393,7 +512,7 @@
          <property name="spacing">
           <number>24</number>
          </property>
-         
+
          <item row="0" column="0">
           <widget class="QFrame" name="cardVehicles">
            <property name="cssClass" stdset="0">
@@ -439,13 +558,46 @@ Pojazdów</string></property>
                  <spacer name="spLegTop"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer>
                 </item>
                 <item>
-                 <widget class="QLabel" name="legFree"><property name="text"><string>🟦  Wolne - 8</string></property></widget>
+                 <layout class="QHBoxLayout" name="legRowFree">
+                  <property name="spacing"><number>8</number></property>
+                  <item>
+                   <widget class="QLabel" name="legDotFree">
+                    <property name="minimumSize"><size><width>12</width><height>12</height></size></property>
+                    <property name="maximumSize"><size><width>12</width><height>12</height></size></property>
+                    <property name="pixmap"><pixmap resource="resources.qrc">:/icons/dot-blue.svg</pixmap></property>
+                    <property name="scaledContents"><bool>true</bool></property>
+                   </widget>
+                  </item>
+                  <item><widget class="QLabel" name="legFree"><property name="text"><string>Wolne - 8</string></property></widget></item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QLabel" name="legRented"><property name="text"><string>🟩  Wynajęte - 3</string></property></widget>
+                 <layout class="QHBoxLayout" name="legRowRented">
+                  <property name="spacing"><number>8</number></property>
+                  <item>
+                   <widget class="QLabel" name="legDotRented">
+                    <property name="minimumSize"><size><width>12</width><height>12</height></size></property>
+                    <property name="maximumSize"><size><width>12</width><height>12</height></size></property>
+                    <property name="pixmap"><pixmap resource="resources.qrc">:/icons/dot-green.svg</pixmap></property>
+                    <property name="scaledContents"><bool>true</bool></property>
+                   </widget>
+                  </item>
+                  <item><widget class="QLabel" name="legRented"><property name="text"><string>Wynajęte - 3</string></property></widget></item>
+                 </layout>
                 </item>
                 <item>
-                 <widget class="QLabel" name="legRepair"><property name="text"><string>🟧  Naprawa - 1</string></property></widget>
+                 <layout class="QHBoxLayout" name="legRowRepair">
+                  <property name="spacing"><number>8</number></property>
+                  <item>
+                   <widget class="QLabel" name="legDotRepair">
+                    <property name="minimumSize"><size><width>12</width><height>12</height></size></property>
+                    <property name="maximumSize"><size><width>12</width><height>12</height></size></property>
+                    <property name="pixmap"><pixmap resource="resources.qrc">:/icons/dot-orange.svg</pixmap></property>
+                    <property name="scaledContents"><bool>true</bool></property>
+                   </widget>
+                  </item>
+                  <item><widget class="QLabel" name="legRepair"><property name="text"><string>Naprawa - 1</string></property></widget></item>
+                 </layout>
                 </item>
                 <item>
                  <spacer name="spLegBot"><property name="orientation"><enum>Qt::Vertical</enum></property></spacer>
@@ -484,7 +636,17 @@ Pojazdów</string></property>
               </item>
               <item>
                <widget class="QPushButton" name="ActionBtnBlue">
-                <property name="text"><string>Wynajmij 🔑</string></property>
+                <property name="text"><string>Wynajmij</string></property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icons/key-square.svg</normaloff>:/icons/key-square.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
                </widget>
               </item>
              </layout>
@@ -525,8 +687,9 @@ Pojazdów</string></property>
                 <property name="minimumSize"><size><width>38</width><height>38</height></size></property>
                 <property name="maximumSize"><size><width>38</width><height>38</height></size></property>
                 <property name="alignment"><set>Qt::AlignCenter</set></property>
-                <property name="text"><string>⚠️</string></property>
-                <property name="styleSheet"><string>background: #fef3e6; border-radius: 8px; font-size: 16px;</string></property>
+                <property name="pixmap"><pixmap resource="resources.qrc">:/icons/warning.svg</pixmap></property>
+                <property name="scaledContents"><bool>false</bool></property>
+                <property name="styleSheet"><string>background: #fef3e6; border-radius: 8px; padding: 9px;</string></property>
                </widget>
               </item>
               <item>
@@ -543,8 +706,9 @@ Pojazdów</string></property>
                 <property name="minimumSize"><size><width>38</width><height>38</height></size></property>
                 <property name="maximumSize"><size><width>38</width><height>38</height></size></property>
                 <property name="alignment"><set>Qt::AlignCenter</set></property>
-                <property name="text"><string>🔔</string></property>
-                <property name="styleSheet"><string>background: #e8f4fd; border-radius: 8px; font-size: 16px;</string></property>
+                <property name="pixmap"><pixmap resource="resources.qrc">:/icons/bell.svg</pixmap></property>
+                <property name="scaledContents"><bool>false</bool></property>
+                <property name="styleSheet"><string>background: #e8f4fd; border-radius: 8px; padding: 9px;</string></property>
                </widget>
               </item>
               <item>
@@ -584,7 +748,17 @@ Pojazdów</string></property>
               </item>
               <item>
                <widget class="QPushButton" name="ActionBtnGreen">
-                <property name="text"><string>Dodaj 👤+</string></property>
+                <property name="text"><string>Dodaj</string></property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/icons/user-add.svg</normaloff>:/icons/user-add.svg</iconset>
+                </property>
+                <property name="iconSize">
+                 <size>
+                  <width>16</width>
+                  <height>16</height>
+                 </size>
+                </property>
                </widget>
               </item>
              </layout>
@@ -609,6 +783,8 @@ Pojazdów</string></property>
    </layout>
   </widget>
  </widget>
- <resources/>
+<resources>
+ <include location="../../resources/resources.qrc"/>
+</resources>
  <connections/>
 </ui>

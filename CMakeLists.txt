@@ -8,10 +8,13 @@ set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network Sql)
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Network Sql Svg)
 
 qt_add_executable(SymulatorWypozyczalni
     src/main.cpp
+    resources/resources.qrc
+    src/ui/svg_helper.h
+    src/ui/svg_helper.cpp
     src/ui/dashboard/dashboard.cpp
     src/ui/dashboard/dashboard.h
     src/ui/dashboard/dashboard.ui
@@ -46,4 +49,5 @@ target_link_libraries(SymulatorWypozyczalni PRIVATE
     Qt6::Widgets
     Qt6::Network
     Qt6::Sql
+    Qt6::Svg
 )

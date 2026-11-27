@@ -11,8 +11,8 @@
 
 using namespace carent::ui;
 
-DashboardWindow::DashboardWindow(QWidget *parent)
-    : QMainWindow(parent), ui(new Ui::DashboardWindow) {
+DashboardWindow::DashboardWindow(DashboardService *service, QWidget *parent)
+    : QMainWindow(parent), ui(new Ui::DashboardWindow), service(service) {
     ui->setupUi(this);
 
     QList<QWidget *> cards = {
@@ -35,6 +35,9 @@ DashboardWindow::DashboardWindow(QWidget *parent)
 
     setupTable(ui->tableRentals);
     setupTable(ui->tableClients);
+
+    connect(service, &DashboardService::dataChanged, this, &DashboardWindow::populateTables);
+
     populateTables();
 }
 
@@ -75,41 +78,54 @@ QWidget *DashboardWindow::createBadge(const QString &text, const QString &bgColo
 }
 
 void DashboardWindow::populateTables() {
-    ui->tableRentals->setRowCount(3);
+    const DashboardData data = service->loadDashboardData();
+
+    ui->tableRentals->clearContents();
+    ui->tableRentals->setRowCount(data.rentals.size());
     struct RentalRow {
         QString car, client, plate, days, bg, fg;
     };
-    QList<RentalRow> rentals = {
-        {"Ford Ecosport", "Beata B.", "PO 6T44J", "7 dni", "#e8f4fd", "#1e88e5"},
-        {"Hyundai i30", "Tomasz K.", "PO 5A333", "4 dni", "#e8f4fd", "#1e88e5"},
-        {"Iveco", "Budimex", "PO 4K21A", "2 dni", "#fef3e6", "#d97724"}};
 
-    for (int i = 0; i < rentals.size(); ++i) {
-        auto *carItem = new QTableWidgetItem(rentals[i].car);
+    for (int i = 0; i < data.rentals.size(); ++i) {
+        const auto &r = data.rentals[i];
+        auto carItem = new QTableWidgetItem(r.carName);
+
         QFont f = carItem->font();
         f.setBold(true);
         carItem->setFont(f);
         ui->tableRentals->setItem(i, 0, carItem);
-        ui->tableRentals->setItem(i, 1, new QTableWidgetItem(rentals[i].client));
-        ui->tableRentals->setItem(i, 2, new QTableWidgetItem(rentals[i].plate));
-        ui->tableRentals->setCellWidget(i, 3, createBadge(rentals[i].days, rentals[i].bg, rentals[i].fg));
+        ui->tableRentals->setItem(i, 1, new QTableWidgetItem(r.clientName));
+        ui->tableRentals->setItem(i, 2, new QTableWidgetItem(r.plate));
+        QString bg = (r.daysLeft <= 2) ? "#fef3e6" : "#e8f4fd";
+        QString fg = (r.daysLeft <= 2) ? "#d97724" : "#1e88e5";
+        ui->tableRentals->setCellWidget(i, 3, createBadge(QString("%1 dni").arg(r.daysLeft), bg, fg));
     }
 
-    ui->tableClients->setRowCount(2);
+    ui->tableClients->clearContents();
+    ui->tableClients->setRowCount(data.clients.size());
     QFont boldFont;
     boldFont.setBold(true);
 
-    auto *c1 = new QTableWidgetItem("Beata Barniak");
-    c1->setFont(boldFont);
-    ui->tableClients->setItem(0, 0, c1);
-    ui->tableClients->setItem(0, 1, new QTableWidgetItem("PO 6T44J"));
-    ui->tableClients->setCellWidget(0, 2, createBadge("Ważne", "#e8f6ef", "#2e9f63"));
-    ui->tableClients->setCellWidget(0, 3, createBadge("Aktywny", "#e8f6ef", "#2e9f63"));
+    for (int i = 0; i < data.clients.size(); ++i) {
+        const auto &c = data.clients[i];
 
-    auto *c2 = new QTableWidgetItem("Tomasz Kolak");
-    c2->setFont(boldFont);
-    ui->tableClients->setItem(1, 0, c2);
-    ui->tableClients->setItem(1, 1, new QTableWidgetItem("Brak"));
-    ui->tableClients->setCellWidget(1, 2, createBadge("Nieważne", "#fceaea", "#d94343"));
-    ui->tableClients->setCellWidget(1, 3, createBadge("Aktywny", "#e8f6ef", "#2e9f63"));
+        auto *nameItem = new QTableWidgetItem(c.fullName);
+        nameItem->setFont(boldFont);
+        ui->tableClients->setItem(i, 0, nameItem);
+        ui->tableClients->setItem(i, 1, new QTableWidgetItem(c.activePlate));
+
+        ui->tableClients->setCellWidget(i, 2, c.hasValidLicence ? createBadge("Ważne", "#e8f6ef", "#2e9f63") : createBadge("Nieważne", "#fceaea", "#d94343"));
+
+        ui->tableClients->setCellWidget(i, 3, c.isActive ? createBadge("Aktywny", "#e8f6ef", "#2e9f63") : createBadge("Nieaktywny", "#fceaea", "#d94343"));
+    }
+
+    int totalVehicles = data.totalVehicles();
+
+    ui->chartPlaceholder->setText(QString("%1\nPojazdów").arg(totalVehicles));
+    ui->legFree->setText(QString("🟦  Wolne - %1").arg(data.availableCount));
+    ui->legRented->setText(QString("🟩  Wynajęte - %1").arg(data.rentedCount));
+    ui->legRepair->setText(QString("🟧  Naprawa - %1").arg(data.serviceCount));
+
+    ui->lblClientsKpiVal->setText(QString("%1").arg(data.clients.size()));
+    ui->lblRentalsKpiVal->setText(QString("%1").arg(data.rentals.size()));
 }

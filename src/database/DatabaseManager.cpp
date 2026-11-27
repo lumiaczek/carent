@@ -52,7 +52,9 @@ QList<QSharedPointer<Vehicle>> DatabaseManager::getAllVehicles(){
     }
     while(query.next()){
         int id = query.value("id").toInt();
+        qDebug()<<"Id:"<<id;
         QString typeStr = query.value("type").toString();
+        qDebug()<<"Type str"<<typeStr;
         QString brand = query.value("brand").toString();
         QString model = query.value("model").toString();
         QString plate = query.value("plate").toString();
@@ -82,6 +84,9 @@ QList<QSharedPointer<Vehicle>> DatabaseManager::getAllVehicles(){
             auto van = QSharedPointer<DeliveryVan>::create(id, brand, model, plate, cat, dailyRate, stat, transm, fuel, capacity, cargo_volume, has_tail_lift, height);
 
             vehicles.append(van);
+        }
+        else{
+            qWarning() << "Nieznany typ pojazdu w bazie dla ID:" << id << "type= " <<typeStr;
         }
     }
     return vehicles;
@@ -261,7 +266,7 @@ QList<Rental> DatabaseManager::getAllRentals(){
         int customer_id = query.value("customer_id").toInt();
         int vehicle_id = query.value("vehicle_id").toInt();
         QDate start_date = query.value("start_date").toDate();
-        QDate end_date = query.value("end_data").toDate();
+        QDate end_date = query.value("end_date").toDate();
 
         double total_cost = query.value("total_cost").toDouble();
 
@@ -288,7 +293,7 @@ bool DatabaseManager::initSchema(){
             plate TEXT UNIQUE NOT NULL, 
             category TEXT NOT NULL, 
             daily_rate REAL NOT NULL, 
-            status TEXT NOT NULL DEFAULT 'Available',
+            status INTEGER NOT NULL DEFAULT 0,
             transmission TEXT NOT NULL,
             fuel TEXT NOT NULL
         );
@@ -332,7 +337,7 @@ bool DatabaseManager::initSchema(){
             start_date TEXT NOT NULL,
             end_date TEXT NOT NULL,
             total_cost REAL NOT NULL,
-            status TEXT NOT NULL DEFAULT 'ACTIVE',
+            status INTEGER NOT NULL DEFAULT 0,
             FOREIGN KEY(customer_id) REFERENCES customers(id) ON DELETE RESTRICT,
             FOREIGN KEY(vehicle_id) REFERENCES vehicles(id) ON DELETE RESTRICT
         )

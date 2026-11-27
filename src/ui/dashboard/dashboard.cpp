@@ -22,6 +22,8 @@ DashboardWindow::DashboardWindow(DashboardService *service, QWidget *parent)
         applyShadow(card);
     }
 
+    ui->LogoIcon->setPixmap(colorizeSvgPixmap(":/icons/car-logo.svg", Qt::white, {40, 40}));
+
     ui->iconIncome->setPixmap(colorizeSvgPixmap(":/icons/trend-up.svg", QColor("#2E9D6E"), {20, 20}));
     ui->iconCosts->setPixmap(colorizeSvgPixmap(":/icons/fuel.svg", QColor("#D64550"), {20, 20}));
     ui->iconClientsKpi->setPixmap(colorizeSvgPixmap(":/icons/user.svg", QColor("#457EAC"), {20, 20}));

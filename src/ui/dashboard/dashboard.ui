@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1360</width>
-    <height>860</height>
+    <width>1700</width>
+    <height>950</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,14 +70,14 @@
           <widget class="QLabel" name="LogoIcon">
            <property name="minimumSize">
             <size>
-             <width>28</width>
-             <height>28</height>
+             <width>40</width>
+             <height>40</height>
             </size>
            </property>
            <property name="maximumSize">
             <size>
-             <width>28</width>
-             <height>28</height>
+             <width>42</width>
+             <height>42</height>
             </size>
            </property>
            <property name="pixmap">
@@ -86,6 +86,7 @@
            <property name="scaledContents">
             <bool>true</bool>
            </property>
+           <property name="styleSheet"><string>background-color: #1E293B; border-radius: 8px; padding: 9px;</string></property>
           </widget>
          </item>
          <item>
@@ -95,13 +96,13 @@
            </property>
           </widget>
          </item>
-         <item>
+         <!-- <item>
           <spacer name="logoRightSpacer">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
           </spacer>
-         </item>
+         </item> -->
         </layout>
        </item>
        <item>

@@ -19,4 +19,14 @@
     <file alias="warning.svg">icons/warning.svg</file>
     <file alias="user-add.svg">icons/user-add.svg</file>
   </qresource>
+
+<qresource prefix="/fonts">
+    <file alias="Inter.ttf">fonts/Inter.ttf</file>
+    <file alias="Poppins/Poppins-Regular.ttf">fonts/Poppins/Poppins-Regular.ttf</file>
+    <file alias="Poppins/Poppins-Medium.ttf">fonts/Poppins/Poppins-Medium.ttf</file>
+    <file alias="Poppins/Poppins-SemiBold.ttf">fonts/Poppins/Poppins-SemiBold.ttf</file>
+    <file alias="Poppins/Poppins-Bold.ttf">fonts/Poppins/Poppins-Bold.ttf</file>
+    <file alias="Poppins/Poppins-Italic.ttf">fonts/Poppins/Poppins-Italic.ttf</file>
+    <file alias="Poppins/Poppins-BoldItalic.ttf">fonts/Poppins/Poppins-BoldItalic.ttf</file>
+  </qresource>
 </RCC>

@@ -22,10 +22,13 @@ DashboardWindow::DashboardWindow(QWidget *parent)
         applyShadow(card);
     }
 
-    ui->iconIncome->setPixmap(colorizeSvgPixmap(":/icons/trend-up.svg", QColor("#2e9f63"), {20, 20}));
-    ui->iconCosts->setPixmap(colorizeSvgPixmap(":/icons/fuel.svg", QColor("#d94343"), {20, 20}));
-    ui->iconClientsKpi->setPixmap(colorizeSvgPixmap(":/icons/user.svg", QColor("#3b76a0"), {20, 20}));
-    ui->iconRentalsKpi->setPixmap(colorizeSvgPixmap(":/icons/car-front.svg", QColor("#1e88e5"), {20, 20}));
+    ui->iconIncome->setPixmap(colorizeSvgPixmap(":/icons/trend-up.svg", QColor("#2E9D6E"), {20, 20}));
+    ui->iconCosts->setPixmap(colorizeSvgPixmap(":/icons/fuel.svg", QColor("#D64550"), {20, 20}));
+    ui->iconClientsKpi->setPixmap(colorizeSvgPixmap(":/icons/user.svg", QColor("#457EAC"), {20, 20}));
+    ui->iconRentalsKpi->setPixmap(colorizeSvgPixmap(":/icons/car-front.svg", QColor("#2B95D6"), {20, 20}));
+
+    ui->iconNotif1->setPixmap(colorizeSvgPixmap(":/icons/warning.svg", QColor("#D9822B"), {18, 18}));
+    ui->iconNotif2->setPixmap(colorizeSvgPixmap(":/icons/bell.svg", QColor("#2B95D6"), {18, 18}));
 
     ui->ActionBtnBlue->setIcon(colorizeSvgIcon(":/icons/key-square.svg", Qt::white, {16, 16}));
     ui->ActionBtnGreen->setIcon(colorizeSvgIcon(":/icons/user-add.svg", Qt::white, {16, 16}));
